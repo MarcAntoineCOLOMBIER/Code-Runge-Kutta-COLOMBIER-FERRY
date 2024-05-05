@@ -1,0 +1,76 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Lotka-Volterra Model Parameters
+alpha = 0.5
+beta = 0.2
+gamma = 0.5
+delta = 0.5
+
+
+
+# Integration Time
+dt = 0.01
+
+# Simulation Time
+N = 300000
+t = np.arange(N)*dt
+
+#valeurs initiales
+x0 = 100
+y0 = 5
+
+# f définie l'évolution de la population
+#alpha représente le taux de reproduction des proies intrasèque
+#beta le taux de mortalité
+#delta le taux de reproduction des prédateurs
+#gamma le taux de mortalité intrasèque des prédateurs
+def f(x,y):
+    x_0 = x * (alpha - beta * y)
+    y_0 = y * (delta * x - gamma)
+    return x_0, y_0
+
+def derivation(x,x1,y,y1):
+    dx = (x - x1)/dt
+    dy = (y - y1)/dt
+
+def RunchKutta(x,y): #Runch-Kutta Method
+    x1,y1 = f(x,y)
+    x2,y2 = f(x + x1 * dt * 0.5, y + y1 * dt * 0.5)
+    x3,y3 = f(x + x2 * dt * 0.5, y + y2 * dt * 0.5)
+    x4,y4 = f(x + x3 * dt,y + y3*dt)
+    X = x + dt * (x1/6 + x2/3 + x3/3 +x4/6)
+    Y = y + dt * (y1/6 + y2/3 + y3/3 +y4/6)
+    return X,Y
+
+Proies = [0] * N
+Predateurs = [0] * N
+DProies = [0] * (N-1)
+DPredateurs = [0] * (N-1)
+
+#Initialisation of the grid
+
+Proies[0] = x0
+Predateurs[0] = y0
+
+for i in range (0,N-1):
+    Proies[i+1], Predateurs[i+1] = RunchKutta( Proies[i], Predateurs[i] )
+#    DProies[i+1] , DPredateurs[i+1] = derivation(Proies[i+1],Proies[i],Predateurs[i+1],Predateurs[i])
+
+
+plt.plot(t,Proies , 'b')
+plt.plot(t,Predateurs, 'r')
+plt.title("Nombre des populations au cours du temps Pour alpha = 0.5,beta = 0.2,gamma = 0.5,delta = 0.5")
+#sigma en plus qui se traduit par l'influence de l'environnement autour
+plt.xlabel("temps")
+plt.ylabel("Population")
+plt.legend(('Proies','Predateurs'))
+plt.show()
+
+
+plt.plot(Predateurs, Proies)
+plt.title("Espace des Phases Pour alpha = 0.5,beta = 0.2,gamma = 0.5,delta = 0.5 ")
+plt.xlabel("Nombre de Proies")
+plt.ylabel("Nombre de Predateurs")
+plt.show()
+
