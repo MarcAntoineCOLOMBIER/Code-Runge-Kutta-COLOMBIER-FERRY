@@ -1,3 +1,5 @@
+#Modèle 2D avec interface graphique
+
 # Importation des modules
 import tkinter as tk
 from tkinter import Canvas
