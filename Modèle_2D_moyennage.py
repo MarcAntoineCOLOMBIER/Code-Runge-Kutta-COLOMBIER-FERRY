@@ -1,3 +1,5 @@
+#Modèle 2D moyennage
+
 # Importation des modules
 import tkinter as tk
 from tkinter import Canvas
